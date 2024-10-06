@@ -17,6 +17,6 @@ int main(int argc, char *argv[])
     }
     else
     {
-        pintf("Pattern not allowed!\n");
+        printf("Pattern not allowed!\n");
     }
 }
