@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "forky.h"
 
-void random_sleep(int n)
+void random_sleep()
 {
     srand((time(NULL)) ^ (getpid() << 16));
     int sleep_time = (rand() % 8) + 1;
@@ -25,8 +25,10 @@ void pattern_one(int thing)
 
         if (pid == 0) // equal to 0 means child
         {
+            printf("Process %d (PID: %d) beginning\n", i, getpid());
             fprintf(fptr,"Process %d (PID: %d) beginning\n", i, getpid());
-            random_sleep(i);
+            random_sleep();
+            printf("Process %d (PID: %d) exiting\n", i, getpid());
             fprintf(fptr,"Process %d (PID: %d) exiting\n", i, getpid());
             exit(0);
         }
@@ -58,12 +60,12 @@ void pattern_two(int thing)
         pid = fork();
         if (pid == 0)
         {
-            //fprintf(ptr,"Process %d (PID: %d) beginning\n", i, getpid());
+            fprintf(ptr,"Process %d (PID: %d) beginning\n", i, getpid());
             printf("Process %d (PID: %d) beginning\n", i, getpid());
             random_sleep(i);
             if (i < thing)
             {
-                //fprintf(ptr,"Process %d (PID: %d) started Process %d (PID: %d)\n", i, getpid(), i + 1, getpid());
+                fprintf(ptr,"Process %d (PID: %d) started Process %d (PID: %d)\n", i, getpid(), i + 1, getpid());
                 printf("Process %d (PID: %d) started Process %d (PID: %d)\n", i, getpid(), i + 1, getpid());
             }
         }
@@ -71,7 +73,7 @@ void pattern_two(int thing)
         {
             //printf("Look at me im th parent! (PID: %d)\n", getpid());
             wait(NULL);
-            //fprintf(ptr,"Process %d (PID: %d) exiting\n", i, getpid());
+            fprintf(ptr,"Process %d (PID: %d) exiting\n", i, getpid());
             printf("Process %d (PID: %d) exiting\n", i, getpid());
             exit(0); // Exit parent process after child finishes
         }
