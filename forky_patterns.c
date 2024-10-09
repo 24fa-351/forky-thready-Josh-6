@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "forky.h"
 
-void random_sleep()
+void random_sleep(int n)
 {
     srand((time(NULL)) ^ (getpid() << 16));
     int sleep_time = (rand() % 8) + 1;
@@ -18,7 +18,8 @@ void pattern_one(int thing)
     FILE *fptr;
     fptr = fopen("results.txt", "w");
 
-    if (dup2(fileno(fptr), fileno(stderr)) == -1) {
+    if (dup2(fileno(fptr), fileno(stderr)) == -1)
+    {
         perror("Failed to redirect stderr to results.txt");
         fclose(fptr);
         exit(1);
@@ -28,19 +29,19 @@ void pattern_one(int thing)
     for (int i = 1; i <= thing; i++)
     {
         pid = fork();
-
+        int cpid = getpid();
         if (pid == 0) // equal to 0 means child
         {
-            printf("Process %d (PID: %d) beginning!\n", i, getpid());
-            fprintf(stderr,"Process %d (PID: %d) beginning!\n", i, getpid());
-            random_sleep();
-            printf("Process %d (PID: %d) exiting\n", i, getpid());
-            fprintf(stderr,"Process %d (PID: %d) exiting!\n", i, getpid());
+            printf("Process %d (PID: %d) beginning!\n", i, cpid);//getpid());
+            fprintf(stderr, "Process %d (PID: %d) beginning!\n", i, cpid);//getpid());
+            random_sleep(i);
+            printf("Process %d (PID: %d) exiting\n", i, cpid);//getpid());
+            fprintf(stderr, "Process %d (PID: %d) exiting!\n", i, cpid);//getpid());
             exit(0);
         }
         else if (pid > 0) // greater than 0 means parent
         {
-            //printf("look at me im th parent! (PID: %d)\n", getpid());
+            // printf("look at me im th parent! (PID: %d)\n", getpid());
         }
         else
         {
@@ -63,27 +64,44 @@ void pattern_two(int thing)
     dup2(fileno(ptr), fileno(stderr));
 
     pid_t pid;
-    for (int i = 1; i <= thing; i++)
+    pid_t child_pid;
+    for (int i = 1; i < thing; i++)
     {
         pid = fork();
+        //int parent_pid = getpid();
         if (pid == 0)
         {
-            //fprintf(ptr,"Process %d (PID: %d) beginning\n", i, getpid());
-            fprintf(stderr,"Process %d (PID: %d) beginning\n", i, getpid());
+            fprintf(stderr, "Process %d (PID: %d) beginning\n", i,  getpid());
             printf("Process %d (PID: %d) beginning\n", i, getpid());
+
             random_sleep(i);
-            if (i < thing)
+
+            child_pid = fork();
+            if (child_pid == 0)
             {
-                fprintf(stderr,"Process %d (PID: %d) started Process %d (PID: %d)\n", i, getpid(), i + 1, getpid());
-                printf("Process %d (PID: %d) started Process %d (PID: %d)\n", i, getpid(), i + 1, getpid());
+                fprintf(stderr, "Process %d (PID: %d) started Process %d (PID: %d)\n", i, getppid(), i + 1, getpid());
+                printf("Process %d (PID: %d) started Process %d (PID: %d)\n", i, getppid(), i + 1, getpid());
+                continue;
+            }
+            else if (child_pid > 0)
+            {
+                wait(NULL);
+                fprintf(stderr, "Process %d (PID: %d) exiting\n", i, getpid());
+                printf("Process %d (PID: %d) exiting\n", i, getpid());
+                exit(0); // Exit parent process after child finishes
+            }
+            else
+            {
+                exit(1);
             }
         }
-        else if (pid > 0) // Parents actually can't be neglectful! 
+        else if (pid > 0) // Parents actually can't be neglectful!
         {
-            //printf("Look at me im th parent! (PID: %d)\n", getpid());
+            // printf("Look at me im th parent! (PID: %d)\n", getpid());
             wait(NULL);
-            fprintf(stderr,"Process %d (PID: %d) exiting\n", i, getpid());
-            printf("Process %d (PID: %d) exiting\n", i, getpid());
+            
+            //fprintf(stderr, "Process %d (PID: %d) exiting\n", i, getpid());
+            //printf("Process %d (PID: %d) exiting\n", i, getpid());
             exit(0); // Exit parent process after child finishes
         }
         else
