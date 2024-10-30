@@ -16,14 +16,9 @@ void random_sleep(int n)
 void pattern_one(int thing)
 {
     FILE *fptr;
-    fptr = fopen("results.txt", "w");
+    fptr = fopen("results.txt", "a");
 
-    if (dup2(fileno(fptr), fileno(stderr)) == -1)
-    {
-        perror("Failed to redirect stderr to results.txt");
-        fclose(fptr);
-        exit(1);
-    }
+    dup2(fileno(fptr), fileno(stderr));
 
     pid_t pid;
     for (int i = 1; i <= thing; i++)
@@ -59,7 +54,7 @@ void pattern_one(int thing)
 void pattern_two(int thing)
 {
     FILE *ptr;
-    ptr = fopen("results.txt", "w");
+    ptr = fopen("results.txt", "a");
 
     dup2(fileno(ptr), fileno(stderr));
 

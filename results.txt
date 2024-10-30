@@ -1,11 +1,22 @@
-Process 1 (PID: 27963) beginning
-Process 1 (PID: 27963) started Process 2 (PID: 28005)
-Process 2 (PID: 28005) beginning
-Process 2 (PID: 28005) started Process 3 (PID: 28020)
-Process 3 (PID: 28020) beginning
-Process 3 (PID: 28020) started Process 4 (PID: 28042)
-Process 4 (PID: 28042) beginning
-Process 4 (PID: 28042) exiting
-Process 3 (PID: 28020) exiting
-Process 2 (PID: 28005) exiting
-Process 1 (PID: 27963) exiting
+Pattern 1:
+Process 1 (PID: 11342) beginning!
+Process 2 (PID: 11343) beginning!
+Process 3 (PID: 11344) beginning!
+Process 4 (PID: 11345) beginning!
+Process 2 (PID: 11343) exiting!
+Process 4 (PID: 11345) exiting!
+Process 3 (PID: 11344) exiting!
+Process 1 (PID: 11342) exiting!
+
+Pattern 2:
+Process 1 (PID: 11428) beginning
+Process 1 (PID: 11428) started Process 2 (PID: 11508)
+Process 2 (PID: 11508) beginning
+Process 2 (PID: 11508) started Process 3 (PID: 11513)
+Process 3 (PID: 11513) beginning
+Process 3 (PID: 11513) started Process 4 (PID: 11569)
+Process 4 (PID: 11569) beginning
+Process 4 (PID: 11569) exiting
+Process 3 (PID: 11513) exiting
+Process 2 (PID: 11508) exiting
+Process 1 (PID: 11428) exiting
